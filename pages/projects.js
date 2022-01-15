@@ -2,19 +2,18 @@ import {ethers} from 'ethers'
 import {useEffect,useState} from 'react';
 import axios from 'axios'
 import Web3Modal from 'web3modal'
-import swal from 'sweetalert';
+
 
 import { nftAddress,marketPlaceAddress } from '../config';
 import nft from '../artifacts/contracts/NFT.sol/NFT.json'
 import mp from '../artifacts/contracts/MarketPlace.sol/MarketPlace.json'
-import { createFlow, getFlow, getRPCProvider } from '../util/util';
-import { copyFileSync } from 'fs';
+import { getMPContract, getRPCProvider, getSigner } from '../util/util';
 
 export default function Home() {
   const [nfts, setNFts] = useState([]);
   const [loadingState, setLoadingState] = useState('not-loaded')
-
-  const [talent, setTalents] = useState([])
+  const [project, setProjects] = useState([])
+ 
 
   useEffect(()=> {
     loadNFTS()
@@ -39,62 +38,60 @@ export default function Home() {
           owner :i.owner,
           image : meta.data.image,
           name : meta.data.name,
-          skills : meta.data.skills,
-          score: meta.data.skillscore,
-          testId : meta.data.testId
+          description : meta.data.description,
+          type: meta.data.type,
+          status : meta.data.status,
+          link : meta.data.link
+          
         }
         return item
       }))
-      
-      const talent = items.filter(i=>i.testId!=null)
-     
-      setTalents(talent)
+      const project = items.filter(i=>i.description!=null)
+      setProjects(project)
       setNFts(items)
       setLoadingState('loaded')
   }
 
-  async function hire(nft){
-    
-    await createFlow(nft.seller,nft.price,100000)    
+  async function buyNFT(nft){
+   
+    const contract = await getMPContract()
+
+    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')
+    const transaction = await contract.sell(nftAddress, nft.tokenId, {
+      value: price
+    })
+
+    await transaction.wait()
     loadNFTS()
   }
 
-  async function isHired(seller){
-    let bal =await getFlow(seller);
-    console.log(bal,seller)
-    console.log(bal)
-   return bal.deposit>0;
-  }
-
-  if(loadingState === 'loaded' && !talent.length) return (<div  className='flex justify-center'>
+  if(loadingState === 'loaded' && !project.length) return (<div  className='flex justify-center'>
     <img  src ='./minting.png' alt='t' height={500} width={500} /></div>)
 
   return (
     <div className='flex justify-center'>
-    <div style={{maxWidth: '1600px'}}>
-    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 pt-8 border-orange-500 drop-shadow-xl rounded-3xl'>
+    <div style={{maxWidth: '1400px'}}>
+    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-orange-500 drop-shadow-xl rounded-3xl'>
       {
-        talent.map((nft, i)=>(
-        
+        project.map((nft, i)=>(
+          
           <div key={i} className='bg-zinc-700 border shadow-grey-300 drop-shadow-xl rounded-3xl overflow-hidden px-1 py-1'>
             <div className='bg-zinc-800  shadow-grey-300 drop-shadow-xl rounded-3xl overflow-hidden'>
             <img src={nft.image} className='rounded-3xl'/>
             </div>
-            
             <div className='p-4 bg-zinc-700'>
               <p style={{height:'14px'}} className='text-3x1 font-semibold text-white'>{
                 nft.name} SkillSet #{nft.tokenId}</p>
                 
               </div>
               <div style={{height:'40px'}} className='bg-zinc-700'>
-                  <p className=' text-white bg-zinc-700'>Skills:<b className='text-green-500'> {nft.skills}</b></p>
-                  <p className=' text-white bg-zinc-700'>Score : <b className='text-yellow-500'>{nft.score}</b></p>
+                  <p className=' text-white bg-zinc-700'><b className='text-green-500'> {nft.description}</b></p>
+                  <p className=' text-white bg-zinc-700'><b className='text-yellow-500'>{nft.type}</b></p>
               </div>
               <div className='p-4 bg-zinc-700'>
-                  <p className='text-3x-1 mb-4 font-bold text-white'>{nft.price} ETH/HRS</p>
-                 
+                  <p className='text-3x-1 mb-4 font-bold text-white'>{nft.price} ETH</p>
                   <button className='w-full bg-indigo-500 text-white font-bold py-3 px-12 rounded  hover:bg-purple-600 hover:shadow-orange-300 drop-shadow-xl'
-                  onClick={()=> hire(nft)} >Hire
+                  onClick={()=> buyNFT(nft)} >Buy
                   </button>
                 </div>
           </div>
@@ -104,7 +101,18 @@ export default function Home() {
     </div>
 </div>
 
-     
+      // <footer className={styles.footer}>
+      //   <a
+      //     href="/"
+      //     target="_blank"
+      //     rel="noopener noreferrer"
+      //   >
+      //     Powered by{' '}
+      //     <span className={styles.logo}>
+      //       <Image src="/favicon.ico" alt="Logo" width={30} height={25} />
+      //     </span>
+      //   </a>
+      // </footer>
   
   )
 }
