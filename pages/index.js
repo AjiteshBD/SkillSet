@@ -13,6 +13,7 @@ import { copyFileSync } from 'fs';
 export default function Home() {
   const [nfts, setNFts] = useState([]);
   const [loadingState, setLoadingState] = useState('not-loaded')
+  const [hired, setHired] = useState(false)
 
   const [talent, setTalents] = useState([])
 
@@ -55,16 +56,12 @@ export default function Home() {
 
   async function hire(nft){
     
-    await createFlow(nft.seller,nft.price,100000)    
+    await createFlow(nft.seller,nft.price,100000)   
+    setHired(true) 
     loadNFTS()
   }
 
-  async function isHired(seller){
-    let bal =await getFlow(seller);
-    console.log(bal,seller)
-    console.log(bal)
-   return bal.deposit>0;
-  }
+ 
 
   if(loadingState === 'loaded' && !talent.length) return (<div  className='flex justify-center'>
     <img  src ='./minting.png' alt='t' height={500} width={500} /></div>)
@@ -92,10 +89,13 @@ export default function Home() {
               </div>
               <div className='p-4 bg-zinc-700'>
                   <p className='text-3x-1 mb-4 font-bold text-white'>{nft.price} ETH/HRS</p>
+                 {hired?<button className='w-full bg-teal-500 text-white font-bold py-3 px-12 rounded  hover:bg-purple-600 hover:shadow-orange-300 drop-shadow-xl'
+                  onClick={()=> hire(nft)} >Hired!
+                  </button>:
+                   <button className='w-full bg-indigo-500 text-white font-bold py-3 px-12 rounded  hover:bg-purple-600 hover:shadow-orange-300 drop-shadow-xl'
+                   onClick={()=> hire(nft)} >Hire
+                   </button>}
                  
-                  <button className='w-full bg-indigo-500 text-white font-bold py-3 px-12 rounded  hover:bg-purple-600 hover:shadow-orange-300 drop-shadow-xl'
-                  onClick={()=> hire(nft)} >Hire
-                  </button>
                 </div>
           </div>
         ))
