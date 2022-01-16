@@ -36,47 +36,11 @@ export default function (){
    async function  createMarket(){
        const {name,description,price,type,status,link} =formInput;
        createProjectMarket(name,description,price,type,status,link,fileURL,router)
-    //    if(!name||!price||!description||!fileURL) return
-    //    //upload to IPFS
-    //     const data = JSON.stringify({
-    //         name,description,image:fileURL
-    //     })
-    //     try{
-    //         const metadata = await  client.add(data)
-    //         const url = `https://ipfs.infura.io/ipfs/${metadata.path}`
-    //         // run a function that creates sale and passes in the url 
-    //         createSaleURL(url)
-    //         }catch(err){
-    //             console.log(err)
-    //         }
+    
         
    }
 
-//    async function  createSaleURL(url){
-//        //create item in on blockchain
-//         const web3Modal = new Web3Modal()
-//         const connection = await web3Modal.connect();
-//         const provider = new ethers.providers.Web3Provider(connection)
-//         const signer = provider.getSigner()
 
-//         //create a token
-//         let contract = new ethers.Contract(nftAddress, nft.abi,signer)
-//         let transaction = await contract.mintToken(url)
-//         let tx = await transaction.wait()
-//         let event = tx.events[0]
-//         let value = event.args[2]
-//         let tokenId = value.toNumber()
-//         const price = ethers.utils.parseUnits(formInput.price,'ether')
-
-//         //list on marketplace
-//         contract = new ethers.Contract(marketPlaceAddress, mp.abi,signer)
-//         let listingPrice = contract.getListingPrice();
-//         //listingPrice = listingPrice.toString();
-//         console.log(listingPrice)
-//         transaction = await contract.createMarketOrder(nftAddress,tokenId,price,{value:listingPrice})
-//         await transaction.wait()
-//         router.push('./')
-//    }
 
    return (
     <div className='flex justify-center'>
