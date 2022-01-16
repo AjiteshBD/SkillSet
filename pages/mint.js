@@ -13,7 +13,7 @@ import { createProjectMarket } from '../util/util';
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 //Store Nft in IPFS
-export default function (){
+export default function Mint(){
    const [fileURL,setFileURL] = useState(null);
    const [formInput, updateFormInput] = useState({price:'',name:'',description:'',type:'',status:'',link:''});
    const router = useRouter();
