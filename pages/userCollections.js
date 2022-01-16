@@ -77,7 +77,7 @@ export default function UserCollections() {
               <div className='p-4 bg-black'>
                   <p className='text-3x-1 mb-4 font-bold text-white'>{nft.price} ETH</p>
                   {nft.link!=null?
-                  <a href={nft.link} target="_blank">
+                  <a href={nft.link} target="_blank" rel="noreferrer">
                    <button className='w-full bg-purple-500 text-white font-bold py-3 px-12 rounded'
                    
                  >Get
