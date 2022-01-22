@@ -9,11 +9,15 @@ function MyApp({ Component, pageProps }) {
   const [last, setLast] = useState([]);
 
 
-  useEffect(async()=> {
-  let address = await getSignerAddress();
-  setFirst(address.substring(0,7))
-  setLast(address.substring(address.length,address.length-5))
+   useEffect(()=> {
+    load()
   }, [])
+  
+  async function load(){
+    let address = await getSignerAddress();
+    setFirst(address.substring(0,7))
+    setLast(address.substring(address.length,address.length-5))
+  }
   
 
   return (

@@ -160,7 +160,7 @@ export const createFlow=async(receiver,stoken,flowRate)=>{
 
     const calculatedFlowRate = stoken * 3600 * 24 * 30;
   
-   console.log("Sender :"+sender,"Receiver:"+receiver,'FUSDC :0x42bb40bF79730451B11f6De1CbA222F17b87Afd7','Flowrate :'+10000000)
+  
    
     const createFlowOperation = sf.cfaV1.createFlow({
         sender: sender,
@@ -171,6 +171,7 @@ export const createFlow=async(receiver,stoken,flowRate)=>{
       
       const txnResponse = await createFlowOperation.exec(signer,{ gas: 2100000,gasPrice: 8000000000});
       const txnReceipt = await txnResponse.wait();
+      swal("Confirmed!", "Streaming Started", "success");
       console.log(txnReceipt)
 }
 

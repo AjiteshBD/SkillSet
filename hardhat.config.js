@@ -22,9 +22,10 @@ let secret = require("./secret.json")
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  defaultNetwork: "mumbai",
+  defaultNetwork: "hardhat",
   networks: {
     hardhat: {
+      chainId:1337
     },
     mumbai: {
       url: secret.url,
